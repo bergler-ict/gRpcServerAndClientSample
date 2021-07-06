@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option csharp_namespace = "FormulaOne";
+
+message EmptyRequest {
+}
+
+message TeamHeader {
+	uint64 id = 1;
+	string name = 2;
+	string manufacturer = 3;
+}
+
+message GetTeamRequest {
+	uint64 id = 1;
+}
+
+message Team { 
+	uint64 id = 1;
+	string name = 2;
+	string manufacturer = 3;
+	string firstDriver = 4;
+	string secondDriver = 5;
+	string country = 6;
+}
+
+service TeamsService {
+	rpc GetAllTeams(EmptyRequest) returns (stream TeamHeader);
+	rpc GetTeamById(GetTeamRequest) returns (Team);
+}
