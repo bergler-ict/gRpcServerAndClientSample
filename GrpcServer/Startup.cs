@@ -28,7 +28,7 @@ namespace GrpcServer
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<TeamsService.TeamsServiceBase>();
+                endpoints.MapGrpcService<Services.TeamsService>();
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Hello World!");
