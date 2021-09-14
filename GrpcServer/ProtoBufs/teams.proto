@@ -6,17 +6,17 @@ message EmptyRequest {
 }
 
 message TeamHeader {
-	uint64 id = 1;
+	int32 id = 1;
 	string name = 2;
 	string manufacturer = 3;
 }
 
 message GetTeamRequest {
-	uint64 id = 1;
+	int32 id = 1;
 }
 
 message Team { 
-	uint64 id = 1;
+	int32 id = 1;
 	string name = 2;
 	string manufacturer = 3;
 	string firstDriver = 4;
@@ -24,7 +24,24 @@ message Team {
 	string country = 6;
 }
 
+message Driver {
+	int32 id = 1;
+	string firstName = 2;
+	string lastName = 3;
+}
+
+message Summary {
+	int32 itemsReceived = 1;
+}
+
+message TeamNote {
+	string Message = 1;
+}
+
 service TeamsService {
 	rpc GetAllTeams(EmptyRequest) returns (stream TeamHeader);
 	rpc GetTeamById(GetTeamRequest) returns (Team);
+	rpc AddDrivers(stream Driver) returns (Summary);
+	rpc GetAllDrivers(EmptyRequest) returns (stream Driver);
+	rpc TeamChat(stream TeamNote) returns (stream TeamNote);
 }
