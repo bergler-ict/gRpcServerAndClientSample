@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using FormulaOne;
 using Grpc.Core;
@@ -12,7 +10,6 @@ namespace GrpcServer.Services
 {
     public class TeamsService: FormulaOne.TeamsService.TeamsServiceBase
     {
-        private DriversData _drivers = new DriversData();
         private ILogger _logger;
 
         public TeamsService(ILogger<TeamsService> logger)
@@ -36,15 +33,24 @@ namespace GrpcServer.Services
 
         public override async Task<Summary> AddDrivers(IAsyncStreamReader<Driver> requestStream, ServerCallContext context)
         {
-            var currentDriverCount = _drivers.Drivers.Count;
+            var currentDriverCount = DriversData.Drivers.Count;
 
             while (await requestStream.MoveNext())
             {
                 var driver = requestStream.Current;
-                _drivers.AddDriver(driver);
+                DriversData.AddDriver(driver);
             }
 
-            return new Summary {ItemsReceived = _drivers.Drivers.Count - currentDriverCount};
+            return new Summary {ItemsReceived = DriversData.Drivers.Count - currentDriverCount};
+        }
+
+        // Server side implementatie optionele oefening
+        public override async Task GetAllDrivers(EmptyRequest request, IServerStreamWriter<Driver> responseStream, ServerCallContext context)
+        {
+            foreach (var driver in DriversData.Drivers)
+            {
+                await responseStream.WriteAsync(driver);
+            }
         }
 
         public override async Task TeamChat(IAsyncStreamReader<TeamNote> requestStream, IServerStreamWriter<TeamNote> responseStream, ServerCallContext context)

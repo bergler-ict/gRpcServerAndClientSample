@@ -49,6 +49,16 @@ namespace GrpcClient
 
             Console.WriteLine($"Summary: Received {summary.ItemsReceived} drivers from client.");
 
+            // resultaat optionele oefening
+            Console.WriteLine();
+            var allDriversCall = client.GetAllDrivers(new EmptyRequest());
+
+            await foreach (var driver in allDriversCall.ResponseStream.ReadAllAsync())
+            {
+                Console.WriteLine($"Received Driver {JsonSerializer.Serialize(driver)}");
+            }
+            //
+
             Console.WriteLine("-------------- Bi-directional stream call -----------");
             Console.WriteLine("-------------- Start chatting ------------");
             Console.WriteLine("## Quit chat by pressing q or Q ##");

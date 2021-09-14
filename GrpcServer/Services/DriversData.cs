@@ -3,20 +3,13 @@ using FormulaOne;
 
 namespace GrpcServer.Services
 {
-    public class DriversData
+    public static class DriversData
     {
-        private List<Driver> _drivers;
-
-        public DriversData()
+        public static readonly List<Driver> Drivers = new List<Driver>();
+        
+        public static void AddDriver(Driver driver)
         {
-            _drivers = new List<Driver>();
+            Drivers.Add(driver);
         }
-
-        public void AddDriver(Driver driver)
-        {
-            _drivers.Add(driver);
-        }
-
-        public List<Driver> Drivers => _drivers;
     }
 }
