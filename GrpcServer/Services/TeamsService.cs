@@ -2,15 +2,23 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FormulaOne;
 using Grpc.Core;
+using Microsoft.Extensions.Logging;
 
 namespace GrpcServer.Services
 {
     public class TeamsService: FormulaOne.TeamsService.TeamsServiceBase
     {
         private DriversData _drivers = new DriversData();
+        private ILogger _logger;
+
+        public TeamsService(ILogger<TeamsService> logger)
+        {
+            _logger = logger;
+        }
 
         public override async Task GetAllTeams(EmptyRequest request, IServerStreamWriter<TeamHeader> responseStream, ServerCallContext context)
         {
@@ -44,6 +52,9 @@ namespace GrpcServer.Services
             var answers = PitwallAnswers();
             while (await requestStream.MoveNext())
             {
+                var teamNote = requestStream.Current;
+                _logger.Log(LogLevel.Debug, $"Received message: {teamNote.Message}");
+
                 var idx = new Random().Next(1, 9);
                 await responseStream.WriteAsync(new TeamNote{ Message = $"Pitwall: {answers[idx]}" });
             }

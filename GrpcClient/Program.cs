@@ -51,7 +51,8 @@ namespace GrpcClient
 
             Console.WriteLine("-------------- Bi-directional stream call -----------");
             Console.WriteLine("-------------- Start chatting ------------");
-            
+            Console.WriteLine("## Quit chat by pressing q or Q ##");
+
             var chatCall = client.TeamChat();
 
             // Start response reader task
@@ -81,6 +82,7 @@ namespace GrpcClient
 
             Console.WriteLine("---------- Chat closed ------------");
 
+            Console.WriteLine("*** Press any key to close application ***");
             Console.ReadKey();
         }
 
